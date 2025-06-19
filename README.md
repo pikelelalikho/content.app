@@ -43,7 +43,7 @@ This project is a Flask web application that serves educational content based on
    python app.py
    ```
 
-6. **Access the application**: Open your web browser and go to `http://127.0.0.1:5000`.
+6. **Access the application**: Open your web browser and go to `pikelela.pythonanywhere.com`.
 
 ## API Endpoints
 
