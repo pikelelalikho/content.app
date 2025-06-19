@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code & Notes Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Code + Notes Generator</h1>
+        
+        <div class="form-group">
+            <label for="language">Select Language:</label>
+            <select id="language">
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="content-type">Content Type:</label>
+            <select id="content-type">
+                <option value="paragraph">✍️ Educational Paragraph</option>
+                <option value="code">💻 Code Snippet/Template</option>
+                <option value="tips">🧠 Quick Tips/Notes</option>
+            </select>
+        </div>
+        
+        <button id="generate-btn">Generate Content</button>
+        
+        <div class="output-container hidden" id="output-container">
+            <button class="copy-btn" id="copy-btn">Copy</button>
+            <div class="output-header">
+                <span id="word-count">0 words</span>
+                <span id="char-count">0 characters</span>
+            </div>
+            <div class="output-content" id="output-content"></div>
+            <div class="quote-container hidden" id="quote-container"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="/static/script.js"></script>
+    
+</body>
+</html>
