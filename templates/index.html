@@ -4,42 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code & Notes Generator</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
 </head>
 <body>
+<button id="toggle-theme" class="theme-toggle-btn">🌓 Toggle Theme</button>
+<button id="toggle-syntax-theme" class="theme-toggle-btn" style="top: 70px;">
+  🌓 Syntax: Light
+</button>
+
     <div class="container">
-        <h1>Code + Notes Generator</h1>
-        
-        <div class="form-group">
-            <label for="language">Select Language:</label>
-            <select id="language">
-                <option value="html">HTML</option>
-                <option value="css">CSS</option>
-                <option value="javascript">JavaScript</option>
-                <option value="python">Python</option>
-            </select>
+        <div class="header">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="App Logo" class="logo">
+            <p>Transform your ideas into code with AI-powered generation</p>
         </div>
-        
-        <div class="form-group">
-            <label for="content-type">Content Type:</label>
-            <select id="content-type">
-                <option value="paragraph">✍️ Educational Paragraph</option>
-                <option value="code">💻 Code Snippet/Template</option>
-                <option value="tips">🧠 Quick Tips/Notes</option>
-            </select>
-        </div>
-        
-        <button id="generate-btn">Generate Content</button>
-        
-        <div class="output-container hidden" id="output-container">
-            <button class="copy-btn" id="copy-btn">Copy</button>
-            <div class="output-header">
-                <span id="word-count">0 words</span>
-                <span id="char-count">0 characters</span>
+
+        <div class="main-card">
+            <div class="card-header">
+                <h2>Generate Custom Code</h2>
+                <p>Select your language, describe what you want, and let AI do the magic</p>
             </div>
-            <div class="output-content" id="output-content"></div>
-            <div class="quote-container hidden" id="quote-container"></div>
+
+            <div class="card-body">
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="language">
+                            🔧 Programming Language:
+                        </label>
+                        <select id="language">
+                            <option value="html">HTML - Web Structure</option>
+                            <option value="css">CSS - Styling & Layout</option>
+                            <option value="javascript">JavaScript - Interactivity</option>
+                            <option value="python">Python - Backend & Scripts</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content-type">
+                            📝 Content Type:
+                        </label>
+                        <select id="content-type">
+                            <option value="prompt">🤖 AI Generated (from prompt)</option>
+                            <option value="paragraph">📚 Educational Content</option>
+                            <option value="code">💻 Code Template</option>
+                            <option value="tips">💡 Quick Tips & Best Practices</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="prompt-section">
+                    <div class="form-group">
+                        <label for="prompt">
+                            ✨ Describe what you want to create:
+                        </label>
+                        <textarea 
+                            id="prompt" 
+                            class="prompt-textarea" 
+                            placeholder="Example: Create a contact form with name, email, and message fields&#10;Example: Build a landing page for a tech startup&#10;Example: Make a responsive navigation bar with dropdown menu&#10;Example: Create a Python script to organize files by type"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <button id="generate-btn" class="generate-btn">
+                    <span class="btn-text">Generate Code</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="output-section" id="output-section">
+            <div class="main-card">
+                <div class="card-body">
+                    <div class="output-header">
+                        <div class="output-stats">
+                            <span id="word-count">0 words</span>
+                            <span id="char-count">0 characters</span>
+                            <span id="generation-time"></span>
+                        </div>
+                        <div class="output-actions">
+                            <button id="copy-btn" class="btn btn-copy">📋 Copy Code</button>
+                            <button id="preview-btn" class="btn btn-preview hidden">👁️ Preview</button>
+                        </div>
+                    </div>
+                    <div class="output-content" id="output-content"></div>
+                    <div class="quote-container" id="quote-container"></div>
+                </div>
+            </div>
+        </div>
+
+  <div style="display: flex; gap: 2rem; align-items: flex-start; margin: 2rem 0;">
+  <div style="flex: 1;">
+    <h3 style="margin-bottom: 0.5rem;">Edit HTML</h3>
+    <textarea id="html-input" rows="12" style="width: 100%; font-family: monospace; font-size: 1rem; padding: 1rem; border-radius: 8px; border: 1px solid #ccc; background: #f8f9fa;"></textarea>
+  </div>
+  <div style="flex: 1;">
+    <h3 style="margin-bottom: 0.5rem;">Preview</h3>
+    <iframe id="html-preview" style="width: 100%; height: 300px; border: 1px solid #ccc; border-radius: 8px; background: #fff;"></iframe>
+  </div>
+</div>
+<!-- FEEDBACK FORM -->
+<section class="feedback-section" style="margin-top: 2rem; padding: 1rem; border-top: 1px solid #ccc;">
+  <h3>💬 Rate This Output</h3>
+  <form id="feedback-form">
+    <div class="star-rating" style="margin-bottom: 0.5rem;">
+      <label><input type="radio" name="rating" value="1"> ⭐</label>
+      <label><input type="radio" name="rating" value="2"> ⭐⭐</label>
+      <label><input type="radio" name="rating" value="3"> ⭐⭐⭐</label>
+      <label><input type="radio" name="rating" value="4"> ⭐⭐⭐⭐</label>
+      <label><input type="radio" name="rating" value="5"> ⭐⭐⭐⭐⭐</label>
+    </div>
+    <textarea id="feedback-comment" placeholder="Tell us what you think..." rows="3" style="width: 100%; padding: 0.5rem;"></textarea>
+    <button id="submit-feedback" type="submit" style="margin-top: 0.5rem; background: #4361ee; color: #fff; border: none; padding: 10px 28px; border-radius: 6px; font-size: 1rem; cursor: pointer; transition: background 0.2s;">Submit Feedback</button>
+    <p id="feedback-thanks" class="hidden feedback-thanks">🎉 Thanks for your feedback!</p>
+  </form>
+</section>
+
+<section id="history-section" class="output-section">
+  <div class="output-header">
+    <h3>📚 Output History</h3>
+    <div class="output-actions">
+      <button id="clear-history-btn" class="btn btn-preview">🗑️ Clear All</button>
+    </div>
+  </div>
+  <div id="history-list" class="output-content"></div>
+</section>
+</div>
+
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="preview-modal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <h3>Live Preview</h3>
+                <button class="preview-close" id="preview-close">×</button>
+            </div>
+            <iframe class="preview-iframe" id="preview-iframe"></iframe>
         </div>
     </div>
 
